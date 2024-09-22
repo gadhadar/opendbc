@@ -1,12 +1,99 @@
 # flake8: noqa
+"""
+This module defines constants and mappings for the BYD ATTO 3 car model used in the OpenPilot project.
 
-from selfdrive.car import dbc_dict
-from cereal import car
+Classes:
+  CAR: A class containing constants for different car models.
+
+Constants:
+  HUD_MULTIPLIER (float): A multiplier constant used for the HUD (Head-Up Display).
+  FINGERPRINTS (dict): A dictionary containing CAN message fingerprints for the BYD ATTO 3. Each key is a car model, and the value is a list of dictionaries where each dictionary represents a set of CAN message IDs and their corresponding lengths.
+  DBC (dict): A dictionary mapping car models to their corresponding DBC (Database Container) files. The DBC files define the structure of CAN messages for the car.
+
+Imports:
+  from selfdrive.car import dbc_dict: Imports the dbc_dict function from the selfdrive.car module.
+  from cereal import car: Imports the car module from the cereal package.
+
+Usage:
+  This module is used to provide car-specific constants and mappings for the BYD ATTO 3 model in the OpenPilot project. The FINGERPRINTS dictionary is used to identify the car model based on CAN message IDs, and the DBC dictionary provides the corresponding DBC file for decoding CAN messages.
+"""
+
+#Rewriting the code using Toyota as a reference.
+# from selfdrive.car import dbc_dict
+# from cereal import car
+
+import re
+from collections import defaultdict
+from dataclasses import dataclass, field
+from enum import Enum, IntFlag
+
+from opendbc.car import CarSpecs, PlatformConfig, Platforms, AngleRateLimit, dbc_dict
+from opendbc.car.common.conversions import Conversions as CV
+from opendbc.car.structs import CarParams
+from opendbc.car.docs_definitions import CarFootnote, CarDocs, Column, CarParts, CarHarness
+from opendbc.car.fw_query_definitions import FwQueryConfig, Request, StdQueries
+
 
 HUD_MULTIPLIER = 0.718
 
-class CAR:
-  ATTO3 = "BYD ATTO 3"
+Ecu = CarParams.Ecu
+MIN_ACC_SPEED = 19. * CV.MPH_TO_MS
+PEDAL_TRANSITION = 10. * CV.MPH_TO_MS
+#https://en.wikipedia.org/wiki/BYD_Atto_3
+class CarControllerParams:
+  STEER_STEP = 1
+  STEER_MAX = 1500
+  STEER_ERROR_MAX = 350     # max delta between torque cmd and torque motor
+
+  # Lane Tracing Assist (LTA) control limits
+  # Assuming a steering ratio of 13.7:
+  # Limit to ~2.0 m/s^3 up (7.5 deg/s), ~3.5 m/s^3 down (13 deg/s) at 75 mph
+  # Worst case, the low speed limits will allow ~4.0 m/s^3 up (15 deg/s) and ~4.9 m/s^3 down (18 deg/s) at 75 mph,
+  # however the EPS has its own internal limits at all speeds which are less than that:
+  # Observed internal torque rate limit on TSS 2.5 Camry and RAV4 is ~1500 units/sec up and down when using LTA
+  ANGLE_RATE_LIMIT_UP = AngleRateLimit(speed_bp=[5, 25], angle_v=[0.3, 0.15])
+  ANGLE_RATE_LIMIT_DOWN = AngleRateLimit(speed_bp=[5, 25], angle_v=[0.36, 0.26])
+
+  def __init__(self, CP):
+      if CP.flags:
+        self.ACCEL_MAX = 2.0
+      else:
+        self.ACCEL_MAX = 1.5  # m/s2, lower than allowed 2.0 m/s^2 for tuning reasons
+      self.ACCEL_MIN = -3.5  # m/s2
+
+      if CP.lateralTuning.which() == 'torque':
+        self.STEER_DELTA_UP = 15       # 1.0s time to peak torque
+        self.STEER_DELTA_DOWN = 25     # always lower than 45 otherwise the Rav4 faults (Prius seems ok with 50)
+      else:
+        self.STEER_DELTA_UP = 10       # 1.5s time to peak torque
+        self.STEER_DELTA_DOWN = 25     # always lower than 45 otherwise the Rav4 faults (Prius seems ok with 50)
+
+
+
+@dataclass
+class BYDCarDocs(CarDocs):
+  package: str = "All"
+  car_parts: CarParts = field(default_factory=CarParts.common([CarHarness.generic("BYD")]))
+
+@dataclass
+class BYDPlatformConfig(PlatformConfig):
+  dbc_dict: dict = field(default_factory=lambda: dbc_dict('byd_general_pt', None))
+
+  def init(self):
+    self.dbc_dict = dbc_dict('byd_general_pt', None)
+
+
+
+class CAR(Platforms):
+  #BYD ATTO 3
+  ATTO3 = BYDPlatformConfig(
+    [
+      BYDCarDocs("BYD ATTO 3")
+    ],
+  CarSpecs(mass=1750, wheelbase=2.72, steerRatio=14.8, tireStiffnessFactor=0.7983),
+  dbc_dict('byd_general_pt', None),
+  )
+
 
 FINGERPRINTS = {
   CAR.ATTO3: [{
@@ -17,6 +104,8 @@ FINGERPRINTS = {
   }],
 }
 
-DBC = {
-  CAR.ATTO3: dbc_dict('byd_general_pt', None),
-}
+#This file is located in the /opendbc/dbc/ folder
+# DBC = {
+#   CAR.ATTO3: dbc_dict('byd_general_pt', None),
+# }
+DBC = CAR.create_dbc_map()
