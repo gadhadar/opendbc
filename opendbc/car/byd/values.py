@@ -73,7 +73,7 @@ class CarControllerParams:
 @dataclass
 class BYDCarDocs(CarDocs):
   package: str = "All"
-  car_parts: CarParts = field(default_factory=CarParts.common([CarHarness.custom("BYD")]))
+  car_parts: CarParts = field(default_factory=CarParts.common([CarHarness.custom]))
 
 @dataclass
 class BYDPlatformConfig(PlatformConfig):
