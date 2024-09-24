@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
+import os
+from math import fabs, exp
+from panda import Panda
+
 from cereal import car
-from selfdrive.config import Conversions as CV
+from opendbc.car.common.conversions import Conversions as CV
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint, get_safety_config
-from selfdrive.car.interfaces import CarInterfaceBase
-from selfdrive.car.byd.values import CAR, HUD_MULTIPLIER
+from opendbc.car.interfaces import CarInterfaceBase
+from opendbc.car.byd.values import CAR, HUD_MULTIPLIER
 from selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN
 
 EventName = car.CarEvent.EventName
