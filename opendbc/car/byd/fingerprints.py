@@ -1,7 +1,7 @@
-from opendbc.car.structs import CarParams
+#from opendbc.car.structs import CarParams
 from opendbc.car.byd.values import CAR
 
-Ecu = CarParams.Ecu
+#Ecu = CarParams.Ecu
 
 FINGERPRINTS = {
   CAR.ATTO3: [{
