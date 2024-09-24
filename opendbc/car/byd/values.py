@@ -104,6 +104,56 @@ FINGERPRINTS = {
   }],
 }
 
+# In a Data Module, an identifier is a string used to recognize an object,
+# either by itself or together with the identifiers of parent objects.
+# Each returns a 4 byte hex representation of the decimal part number. `b"\x02\x8c\xf0'"` -> 42790951
+BYD_BOOT_SOFTWARE_PART_NUMER_REQUEST = b'\x1a\xc0'  # likely does not contain anything useful
+BYD_SOFTWARE_MODULE_1_REQUEST = b'\x1a\xc1'
+BYD_SOFTWARE_MODULE_2_REQUEST = b'\x1a\xc2'
+BYD_SOFTWARE_MODULE_3_REQUEST = b'\x1a\xc3'
+
+# Part number of XML data file that is used to configure ECU
+BYD_XML_DATA_FILE_PART_NUMBER = b'\x1a\x9c'
+BYD_XML_CONFIG_COMPAT_ID = b'\x1a\x9b'  # used to know if XML file is compatible with the ECU software/hardware
+
+# This DID is for identifying the part number that reflects the mix of hardware,
+# software, and calibrations in the ECU when it first arrives at the vehicle assembly plant.
+# If there's an Alpha Code, it's associated with this part number and stored in the DID $DB.
+BYD_END_MODEL_PART_NUMBER_REQUEST = b'\x1a\xcb'
+BYD_END_MODEL_PART_NUMBER_ALPHA_CODE_REQUEST = b'\x1a\xdb'
+BYD_BASE_MODEL_PART_NUMBER_REQUEST = b'\x1a\xcc'
+BYD_BASE_MODEL_PART_NUMBER_ALPHA_CODE_REQUEST = b'\x1a\xdc'
+BYD_FW_RESPONSE = b'\x5a'
+
+BYD_FW_REQUESTS = [
+  BYD_BOOT_SOFTWARE_PART_NUMER_REQUEST,
+  BYD_SOFTWARE_MODULE_1_REQUEST,
+  BYD_SOFTWARE_MODULE_2_REQUEST,
+  BYD_SOFTWARE_MODULE_3_REQUEST,
+  BYD_XML_DATA_FILE_PART_NUMBER,
+  BYD_XML_CONFIG_COMPAT_ID,
+  BYD_END_MODEL_PART_NUMBER_REQUEST,
+  BYD_END_MODEL_PART_NUMBER_ALPHA_CODE_REQUEST,
+  BYD_BASE_MODEL_PART_NUMBER_REQUEST,
+  BYD_BASE_MODEL_PART_NUMBER_ALPHA_CODE_REQUEST,
+]
+
+BYD_RX_OFFSET = 0x400
+
+FW_QUERY_CONFIG = FwQueryConfig(
+  requests=[request for req in BYD_FW_REQUESTS for request in [
+    Request(
+      [StdQueries.SHORT_TESTER_PRESENT_REQUEST, req],
+      [StdQueries.SHORT_TESTER_PRESENT_RESPONSE, BYD_FW_RESPONSE + bytes([req[-1]])],
+      rx_offset=BYD_RX_OFFSET,
+      bus=0,
+      logging=True,
+    ),
+  ]],
+  extra_ecus=[(Ecu.fwdCamera, 0x24b, None)],
+)
+
+
 #This file is located in the /opendbc/dbc/ folder
 # DBC = {
 #   CAR.ATTO3: dbc_dict('byd_general_pt', None),
