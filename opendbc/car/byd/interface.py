@@ -33,7 +33,7 @@ class CarInterface(CarInterfaceBase):
     ret.enableGasInterceptor = False
     ret.openpilotLongitudinalControl = True
 
-    if candidate == CAR.ATTO3:
+    if candidate == CAR.BYD_ATTO3:
       ret.wheelbase = 2.72
       ret.steerRatio = 16.0
       ret.centerToFront = ret.wheelbase * 0.44
