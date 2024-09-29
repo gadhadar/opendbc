@@ -67,6 +67,7 @@ FINGERPRINTS = {
   }],
 }
 """
+"""
 # BYD ATTO 3 FW version query
 BYD_VERSION_REQUEST = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER]) + \
   p16(uds.DATA_IDENTIFIER_TYPE.SYSTEM_SUPPLIER_ECU_SOFTWARE_VERSION_NUMBER)
@@ -94,7 +95,7 @@ FW_QUERY_CONFIG = FwQueryConfig(
     (Ecu.hud, 0x294, None),  # hud
   ],
 )
-
+"""
 
 #This file is located in the /opendbc/dbc/ folder
 # DBC = {

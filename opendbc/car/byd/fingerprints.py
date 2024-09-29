@@ -13,5 +13,5 @@ FINGERPRINTS = {
 }
 
 #Found this snippet in car/gm/fingerprint.py codes. This takes care of FW_VERSIONS
-# FW_VERSIONS: dict[str, dict[tuple, list[bytes]]] = {
-# }
+FW_VERSIONS: dict[str, dict[tuple, list[bytes]]] = {
+}
