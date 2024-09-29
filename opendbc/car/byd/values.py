@@ -87,12 +87,11 @@ FW_QUERY_CONFIG = FwQueryConfig(
     ),
   ],
   extra_ecus=[
-    (Ecu.eps, 0x746, None),  # EPS
-    (Ecu.abs, 0x760, None),  # ABS/VSA
-    (Ecu.fwdRadar, 0x757, None),  # Forward Radar
-    (Ecu.fwdCamera, 0x7c4, None),  # Forward Camera
-    (Ecu.engine, 0x7e0, None),  # Engine
-    (Ecu.gateway, 0x18DAB0F1, None),  # Gateway
+    (Ecu.eps, 0x374, None),  # EPS
+    (Ecu.abs, 0x3b0, None),  # ABS/VSA
+    (Ecu.fwdRadar, 0x11f, None),  # Forward Radar
+    (Ecu.fwdCamera, 0x242, None),  # Forward Camera
+    (Ecu.hud, 0x294, None),  # hud
   ],
 )
 
