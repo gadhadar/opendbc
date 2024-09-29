@@ -1,7 +1,7 @@
 from cereal import car
-from selfdrive.car import make_can_msg
-from selfdrive.car.byd.bydcan import create_can_steer_command, create_accel_command, send_buttons, create_lkas_hud
-from selfdrive.car.byd.values import CAR, DBC
+from opendbc.car import make_can_msg
+from opendbc.car.byd.bydcan import create_can_steer_command, create_accel_command, send_buttons, create_lkas_hud
+from opendbc.car.byd.values import CAR, DBC
 from opendbc.can.packer import CANPacker
 from common.numpy_fast import clip
 

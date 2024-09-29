@@ -12,7 +12,7 @@ from opendbc.car.common.conversions import Conversions as CV
 from opendbc.car.structs import CarParams
 from opendbc.car.docs_definitions import CarFootnote, CarDocs, Column, CarParts, CarHarness
 from opendbc.car.fw_query_definitions import FwQueryConfig, Request, StdQueries
-
+from opendbc.can.parser import p16
 
 HUD_MULTIPLIER = 0.718
 

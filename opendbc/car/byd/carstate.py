@@ -2,9 +2,9 @@ from cereal import car
 from opendbc.can.parser import CANParser
 from opendbc.can.can_define import CANDefine
 from common.numpy_fast import mean
-from selfdrive.config import Conversions as CV
-from selfdrive.car.interfaces import CarStateBase
-from selfdrive.car.byd.values import DBC, CAR, HUD_MULTIPLIER
+from openpilot.common.conversions import Conversions as CV
+from opendbc.car.interfaces import CarStateBase
+from opendbc.car.byd.values import DBC, CAR, HUD_MULTIPLIER
 
 class CarState(CarStateBase):
   def __init__(self, CP):
