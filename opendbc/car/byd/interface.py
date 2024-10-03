@@ -5,7 +5,7 @@ from panda import Panda
 
 from cereal import car
 from opendbc.car.common.conversions import Conversions as CV
-from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint, get_safety_config
+from opendbc.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint, get_safety_config #GR QZWF
 from opendbc.car.interfaces import CarInterfaceBase
 from opendbc.car.byd.values import CAR, HUD_MULTIPLIER
 from selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN
