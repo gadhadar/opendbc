@@ -67,8 +67,9 @@ FINGERPRINTS = {
   }],
 }
 """
+
 """
-# BYD ATTO 3 FW version query
+# BYD ATTO 3 FW version query. Without this the FW_Query config will not work in Fingerprints
 BYD_VERSION_REQUEST = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER]) + \
   p16(uds.DATA_IDENTIFIER_TYPE.SYSTEM_SUPPLIER_ECU_SOFTWARE_VERSION_NUMBER)
 BYD_VERSION_RESPONSE = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER + 0x40]) + \
