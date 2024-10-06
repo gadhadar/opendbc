@@ -10,7 +10,7 @@ from opendbc.car.interfaces import CarInterfaceBase
 from opendbc.car.byd.values import CAR, HUD_MULTIPLIER
 from selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN
 
-EventName = car.CarEvent.EventName
+#EventName = car.CarEvent.EventName #GR BYD Doesn't seem to be used anywhere
 
 class CarInterface(CarInterfaceBase):
 
