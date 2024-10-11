@@ -30,7 +30,7 @@ class CarState(CarStateBase):
         self.pt5 = 0
         self.lkas_rdy_btn = False
 
-    def update(self, cp) -> structs.CarState:
+    def update(self, cp, cp_cam, cp_body) -> structs.CarState:
         # ret = car.CarState.new_message()
         ret = structs.CarState()
 
@@ -96,8 +96,8 @@ class CarState(CarStateBase):
         ret.steeringTorque = cp.vl["STEERING_TORQUE"]['MAIN_TORQUE']
         ret.steeringTorqueEps = cp.vl["STEER_MODULE_2"]['DRIVER_EPS_TORQUE'] * steer_dir
         ret.steeringPressed = bool(abs(ret.steeringTorqueEps) > 6)
-        ret.steerWarning = False
-        ret.steerError = False       # TODO
+       # ret.steerWarning = False
+        # ret.steerError = False       # TODO
 
         # TODO: get the real value
         ret.stockAeb = False
@@ -106,8 +106,8 @@ class CarState(CarStateBase):
             [cp.vl["ACC_HUD_ADAS"]["ACC_ON1"], cp.vl["ACC_HUD_ADAS"]["ACC_ON2"]])
 
         distance_val = int(cp.vl["ACC_HUD_ADAS"]['SET_DISTANCE'])
-        ret.cruiseState.setDistance = self.parse_set_distance(
-            self.set_distance_values.get(distance_val, None))
+        # ret.cruiseState.setDistance = self.parse_set_distance(
+        #   self.set_distance_values.get(distance_val, None))
 
         # engage and disengage logic, do we still need this?
         if (cp.vl["PCM_BUTTONS"]["SET_BTN"] != 0 or cp.vl["PCM_BUTTONS"]["RES_BTN"] != 0) and not ret.brakePressed:
