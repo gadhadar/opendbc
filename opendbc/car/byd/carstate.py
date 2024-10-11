@@ -105,7 +105,7 @@ class CarState(CarStateBase):
         ret.cruiseState.available = any(
             [cp.vl["ACC_HUD_ADAS"]["ACC_ON1"], cp.vl["ACC_HUD_ADAS"]["ACC_ON2"]])
 
-        distance_val = int(cp.vl["ACC_HUD_ADAS"]['SET_DISTANCE'])
+        # distance_val = int(cp.vl["ACC_HUD_ADAS"]['SET_DISTANCE'])
         # ret.cruiseState.setDistance = self.parse_set_distance(
         #   self.set_distance_values.get(distance_val, None))
 
