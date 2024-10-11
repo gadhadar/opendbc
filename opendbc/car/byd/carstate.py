@@ -1,10 +1,11 @@
-from cereal import car
+# from cereal import car
 from opendbc.can.parser import CANParser
 from opendbc.can.can_define import CANDefine
-from common.numpy_fast import mean
-from openpilot.common.conversions import Conversions as CV
+from opendbc.car.common.numpy_fast import mean
+from opendbc.car.common.conversions import Conversions as CV
 from opendbc.car.interfaces import CarStateBase
 from opendbc.car.byd.values import DBC
+from opendbc.car import structs
 # from opendbc.car.byd.values import CAR, HUD_MULTIPLIER
 
 
@@ -29,8 +30,9 @@ class CarState(CarStateBase):
         self.pt5 = 0
         self.lkas_rdy_btn = False
 
-    def update(self, cp):
-        ret = car.CarState.new_message()
+    def update(self, cp) -> structs.CarState:
+        # ret = car.CarState.new_message()
+        ret = structs.CarState()
 
         self.tsr = cp.vl["LKAS_HUD_ADAS"]['TSR']
         self.lka_on = cp.vl["LKAS_HUD_ADAS"]['STEER_ACTIVE_ACTIVE_LOW']

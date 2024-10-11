@@ -5,7 +5,7 @@ from opendbc.car.byd.bydcan import create_can_steer_command, send_buttons, creat
 from opendbc.car.byd.values import DBC
 # from opendbc.car.byd.values import CAR
 from opendbc.can.packer import CANPacker
-from common.numpy_fast import clip
+from opendbc.car.common.numpy_fast import clip
 
 # import cereal.messaging as messaging
 
@@ -28,8 +28,8 @@ class CarControllerParams:
 
 class CarController:
     def __init__(self, dbc_name, CP, VM):
-        self.params = CarControllerParams(CP)
-        self.packer = CANPacker(DBC[CP.carFingerprint]['pt'])
+        self.params = CarControllerParams(self.CP)
+        self.packer = CANPacker(DBC[self.CP.carFingerprint]['pt'])
         self.steer_rate_limited = False
         self.lka_active = False
         self.send_resume = False

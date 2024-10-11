@@ -3,14 +3,17 @@
 # from math import fabs, exp
 # from panda import Panda
 
-from cereal import car
+# from cereal import car
 # from opendbc.car.common.conversions import Conversions as CV
 from opendbc.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint, get_safety_config  # GR QZWF
 from opendbc.car.interfaces import CarInterfaceBase
 from opendbc.car.byd.values import CAR, HUD_MULTIPLIER
+from opendbc.car import structs  # GR QZWF
 # from selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN
 
 # EventName = car.CarEvent.EventName #GR BYD Doesn't seem to be used anywhere
+
+TransmissionType = structs.CarParams.TransmissionType  # GR QZWF
 
 
 class CarInterface(CarInterfaceBase):
@@ -21,9 +24,10 @@ class CarInterface(CarInterfaceBase):
             fingerprint = gen_empty_fingerprint()
         ret = CarInterfaceBase.get_std_params(candidate, fingerprint)
         ret.carName = "byd"
-        ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.byd)]
+        ret.safetyConfigs = [get_safety_config(
+            structs.CarParams.SafetyModel.byd)]
         ret.safetyConfigs[0].safetyParam = 1
-        ret.transmissionType = car.CarParams.TransmissionType.automatic
+        ret.transmissionType = TransmissionType.automatic
         ret.radarOffCan = True
         ret.enableApgs = False                 # advanced parking guidance system
         ret.enableDsu = False                  # driving support unit
@@ -31,7 +35,7 @@ class CarInterface(CarInterfaceBase):
         # Lateral MPC cost on steering rate, higher value = sharper turn
         ret.steerRateCost = 0.1
         ret.steerLimitTimer = 0.1              # time before steerLimitAlert is issued
-        ret.steerControlType = car.CarParams.SteerControlType.angle
+        ret.steerControlType = structs.CarParams.SteerControlType.angle
         ret.steerActuatorDelay = 0.01          # Steering wheel actuator delay in seconds
 
         ret.enableGasInterceptor = False
@@ -54,7 +58,7 @@ class CarInterface(CarInterfaceBase):
 
         else:
             ret.dashcamOnly = True
-            ret.safetyModel = car.CarParams.SafetyModel.noOutput
+            ret.safetyModel = structs.CarParams.SafetyModel.noOutput
 
         # currently not in use, byd is using stock long
         ret.longitudinalTuning.deadzoneBP = [0., 8.05, 20]

@@ -1,16 +1,20 @@
 # from common.numpy_fast import clip, interp
-from cereal import car
+# from opendbc.car.can_definitions import CanData
+# from opendbc.car.byd.values import CAR
 
-SetDistance = car.CarState.CruiseState.SetDistance
+# from cereal import car
+
+# SetDistance = car.CarState.CruiseState.SetDistance
 
 
 def compute_set_distance(state):
-    if state == SetDistance.aggresive:
-        return 2
-    elif state == SetDistance.normal:
-        return 1
-    else:
-        return 0
+    return 1
+    # if state == SetDistance.aggresive:
+    #     return 2
+    # elif state == SetDistance.normal:
+    #     return 1
+    # else:
+    #     return 0
 
 # not an actual known crc function, reverse engineered
 
