@@ -9,7 +9,7 @@
 
 def compute_set_distance(state):
     return 1
-    # if state == SetDistance.aggresive:
+    # if state == SetDistance.aggressive:
     #     return 2
     # elif state == SetDistance.normal:
     #     return 1
