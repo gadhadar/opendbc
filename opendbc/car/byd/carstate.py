@@ -30,13 +30,13 @@ class CarState(CarStateBase):
         self.pt5 = 0
         self.lkas_rdy_btn = False
 
-    def update(self, cp, cp_cam, cp_body) -> structs.CarState:
+    def update(self, cp, cp_cam, *_) -> structs.CarState:
         # ret = car.CarState.new_message()
         ret = structs.CarState()
 
         self.tsr = cp.vl["LKAS_HUD_ADAS"]['TSR']
         self.lka_on = cp.vl["LKAS_HUD_ADAS"]['STEER_ACTIVE_ACTIVE_LOW']
-        self.lkas_rdy_btn = cp.vl["PCM_BUTTONS"]['LKAS_ON_BTN']
+        self.lkas_rdy_btn = cp_cam.vl["PCM_BUTTONS"]['LKAS_ON_BTN']
         self.abh = cp.vl["LKAS_HUD_ADAS"]['SET_ME_XFF']
         self.passthrough = cp.vl["LKAS_HUD_ADAS"]['SET_ME_X5F']
         self.HMA = cp.vl["LKAS_HUD_ADAS"]['HMA']
@@ -146,8 +146,9 @@ class CarState(CarStateBase):
             ret.leftBlindspot = bool(cp.vl["BSM"]["LEFT_APPROACH"])
             ret.rightBlindspot = bool(cp.vl["BSM"]["RIGHT_APPROACH"])
 
-        self.lss_state = cp.vl["LKAS_HUD_ADAS"]["LSS_STATE"]
-        self.lss_alert = cp.vl["LKAS_HUD_ADAS"]["SETTINGS"]
+# Camera Controls
+        self.lss_state = cp_cam.vl["LKAS_HUD_ADAS"]["LSS_STATE"]
+        self.lss_alert = cp_cam.vl["LKAS_HUD_ADAS"]["SETTINGS"]
         return ret
 
     @staticmethod
