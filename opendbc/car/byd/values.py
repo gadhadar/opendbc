@@ -72,7 +72,6 @@ FW_QUERY_CONFIG = FwQueryConfig(
             bus=0,
         ),
     ],
-    fingerprint_ecus=[]
 )
 
 DBC = CAR.create_dbc_map()
