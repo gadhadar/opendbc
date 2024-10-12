@@ -39,10 +39,10 @@ class CarControllerParams:
 class BYDCarDocs(CarDocs):
     package: str = "All"
     car_parts: CarParts = field(
-        default_factory=lambda: CarParts.common([CarHarness.custom]))
+        default_factory=CarParts.common([CarHarness.custom]))
 
 
-@dataclass
+@ dataclass
 class BYDPlatformConfig(PlatformConfig):
     dbc_dict: dict = field(
         default_factory=lambda: dbc_dict('byd_general_pt', None))
