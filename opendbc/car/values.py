@@ -14,7 +14,7 @@ from opendbc.car.toyota.values import CAR as TOYOTA
 from opendbc.car.volkswagen.values import CAR as VOLKSWAGEN
 from opendbc.car.byd.values import CAR as BYD  # GR-BYD Details
 
-Platform = BODY | CHRYSLER | FORD | GM | HONDA | HYUNDAI | MAZDA | MOCK | NISSAN | SUBARU | TOYOTA | VOLKSWAGEN | BYD  # GR-BYD Details
+Platform = BODY | CHRYSLER | FORD | GM | HONDA | HYUNDAI | MAZDA | MOCK | NISSAN | SUBARU | TOYOTA | VOLKSWAGEN | BYD | TESLA  # GR-BYD Details
 BRANDS = get_args(Platform)
 
 PLATFORMS: dict[str, Platform] = {
