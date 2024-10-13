@@ -7,8 +7,7 @@ from opendbc.can.can_define import CANDefine
 from opendbc.car import create_button_events, structs
 from opendbc.car.common.conversions import Conversions as CV
 from opendbc.car.hyundai.hyundaicanfd import CanBus
-from opendbc.car.hyundai.values import HyundaiFlags, CAR, DBC, CAN_GEARS, CAMERA_SCC_CAR, \
-                                                   CANFD_CAR, Buttons, CarControllerParams
+from opendbc.car.hyundai.values import HyundaiFlags, CAR, DBC, Buttons, CarControllerParams
 from opendbc.car.interfaces import CarStateBase
 
 ButtonType = structs.CarState.ButtonEvent.Type
@@ -33,11 +32,11 @@ class CarState(CarStateBase):
                           "GEAR_ALT" if CP.flags & HyundaiFlags.CANFD_ALT_GEARS else \
                           "GEAR_ALT_2" if CP.flags & HyundaiFlags.CANFD_ALT_GEARS_2 else \
                           "GEAR_SHIFTER"
-    if CP.carFingerprint in CANFD_CAR:
+    if CP.flags & HyundaiFlags.CANFD:
       self.shifter_values = can_define.dv[self.gear_msg_canfd]["GEAR"]
-    elif self.CP.carFingerprint in CAN_GEARS["use_cluster_gears"]:
+    elif self.CP.flags & HyundaiFlags.CLUSTER_GEARS:
       self.shifter_values = can_define.dv["CLU15"]["CF_Clu_Gear"]
-    elif self.CP.carFingerprint in CAN_GEARS["use_tcu_gears"]:
+    elif self.CP.flags & HyundaiFlags.TCU_GEARS:
       self.shifter_values = can_define.dv["TCU12"]["CUR_GR"]
     else:  # preferred and elect gear methods use same definition
       self.shifter_values = can_define.dv["LVR12"]["CF_Lvr_Gear"]
@@ -59,11 +58,11 @@ class CarState(CarStateBase):
     self.params = CarControllerParams(CP)
 
   def update(self, cp, cp_cam, *_) -> structs.CarState:
-    if self.CP.carFingerprint in CANFD_CAR:
+    if self.CP.flags & HyundaiFlags.CANFD:
       return self.update_canfd(cp, cp_cam)
 
     ret = structs.CarState()
-    cp_cruise = cp_cam if self.CP.carFingerprint in CAMERA_SCC_CAR else cp
+    cp_cruise = cp_cam if self.CP.flags & HyundaiFlags.CAMERA_SCC else cp
     self.is_metric = cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"] == 0
     speed_conv = CV.KPH_TO_MS if self.is_metric else CV.MPH_TO_MS
 
@@ -142,9 +141,9 @@ class CarState(CarStateBase):
     # as this seems to be standard over all cars, but is not the preferred method.
     if self.CP.flags & (HyundaiFlags.HYBRID | HyundaiFlags.EV):
       gear = cp.vl["ELECT_GEAR"]["Elect_Gear_Shifter"]
-    elif self.CP.carFingerprint in CAN_GEARS["use_cluster_gears"]:
+    elif self.CP.flags & HyundaiFlags.CLUSTER_GEARS:
       gear = cp.vl["CLU15"]["CF_Clu_Gear"]
-    elif self.CP.carFingerprint in CAN_GEARS["use_tcu_gears"]:
+    elif self.CP.flags & HyundaiFlags.TCU_GEARS:
       gear = cp.vl["TCU12"]["CUR_GR"]
     else:
       gear = cp.vl["LVR12"]["CF_Lvr_Gear"]
@@ -169,11 +168,12 @@ class CarState(CarStateBase):
     self.clu11 = copy.copy(cp.vl["CLU11"])
     self.steer_state = cp.vl["MDPS12"]["CF_Mdps_ToiActive"]  # 0 NOT ACTIVE, 1 ACTIVE
     prev_cruise_buttons = self.cruise_buttons[-1]
+    prev_main_buttons = self.main_buttons[-1]
     self.cruise_buttons.extend(cp.vl_all["CLU11"]["CF_Clu_CruiseSwState"])
     self.main_buttons.extend(cp.vl_all["CLU11"]["CF_Clu_CruiseSwMain"])
 
-    if self.CP.openpilotLongitudinalControl:
-      ret.buttonEvents = create_button_events(self.cruise_buttons[-1], prev_cruise_buttons, BUTTONS_DICT)
+    ret.buttonEvents = [*create_button_events(self.cruise_buttons[-1], prev_cruise_buttons, BUTTONS_DICT),
+                        *create_button_events(self.main_buttons[-1], prev_main_buttons, {1: ButtonType.mainCruise})]
 
     return ret
 
@@ -248,6 +248,7 @@ class CarState(CarStateBase):
       ret.cruiseState.nonAdaptive = cp.vl["MANUAL_SPEED_LIMIT_ASSIST"]["MSLA_ENABLED"] == 1
 
     prev_cruise_buttons = self.cruise_buttons[-1]
+    prev_main_buttons = self.main_buttons[-1]
     self.cruise_buttons.extend(cp.vl_all[self.cruise_btns_msg_canfd]["CRUISE_BUTTONS"])
     self.main_buttons.extend(cp.vl_all[self.cruise_btns_msg_canfd]["ADAPTIVE_CRUISE_MAIN_BTN"])
     self.buttons_counter = cp.vl[self.cruise_btns_msg_canfd]["COUNTER"]
@@ -257,13 +258,13 @@ class CarState(CarStateBase):
       self.hda2_lfa_block_msg = copy.copy(cp_cam.vl["CAM_0x362"] if self.CP.flags & HyundaiFlags.CANFD_HDA2_ALT_STEERING
                                           else cp_cam.vl["CAM_0x2a4"])
 
-    if self.CP.openpilotLongitudinalControl:
-      ret.buttonEvents = create_button_events(self.cruise_buttons[-1], prev_cruise_buttons, BUTTONS_DICT)
+    ret.buttonEvents = [*create_button_events(self.cruise_buttons[-1], prev_cruise_buttons, BUTTONS_DICT),
+                        *create_button_events(self.main_buttons[-1], prev_main_buttons, {1: ButtonType.mainCruise})]
 
     return ret
 
   def get_can_parser(self, CP):
-    if CP.carFingerprint in CANFD_CAR:
+    if CP.flags & HyundaiFlags.CANFD:
       return self.get_can_parser_canfd(CP)
 
     messages = [
@@ -282,7 +283,7 @@ class CarState(CarStateBase):
       ("SAS11", 100),
     ]
 
-    if not CP.openpilotLongitudinalControl and CP.carFingerprint not in CAMERA_SCC_CAR:
+    if not CP.openpilotLongitudinalControl and not (CP.flags & HyundaiFlags.CAMERA_SCC):
       messages += [
         ("SCC11", 50),
         ("SCC12", 50),
@@ -303,9 +304,9 @@ class CarState(CarStateBase):
 
     if CP.flags & (HyundaiFlags.HYBRID | HyundaiFlags.EV):
       messages.append(("ELECT_GEAR", 20))
-    elif CP.carFingerprint in CAN_GEARS["use_cluster_gears"]:
+    elif CP.flags & HyundaiFlags.CLUSTER_GEARS:
       pass
-    elif CP.carFingerprint in CAN_GEARS["use_tcu_gears"]:
+    elif CP.flags & HyundaiFlags.TCU_GEARS:
       messages.append(("TCU12", 100))
     else:
       messages.append(("LVR12", 100))
@@ -314,14 +315,14 @@ class CarState(CarStateBase):
 
   @staticmethod
   def get_cam_can_parser(CP):
-    if CP.carFingerprint in CANFD_CAR:
+    if CP.flags & HyundaiFlags.CANFD:
       return CarState.get_cam_can_parser_canfd(CP)
 
     messages = [
       ("LKAS11", 100)
     ]
 
-    if not CP.openpilotLongitudinalControl and CP.carFingerprint in CAMERA_SCC_CAR:
+    if not CP.openpilotLongitudinalControl and CP.flags & HyundaiFlags.CAMERA_SCC:
       messages += [
         ("SCC11", 50),
         ("SCC12", 50),

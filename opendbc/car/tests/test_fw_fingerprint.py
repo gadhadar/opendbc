@@ -99,17 +99,14 @@ class TestFwFingerprint:
             elif len(matches):
                 self.assertFingerprints(matches, car_model)
 
-    def test_fw_version_lists(self, subtests):
-        for car_model, ecus in FW_VERSIONS.items():
-            with subtests.test(car_model=car_model.value):
-                for ecu, ecu_fw in ecus.items():
-                    with subtests.test((ecu[0].value, ecu[1], ecu[2])):
-                        duplicates = {
-                            fw for fw in ecu_fw if ecu_fw.count(fw) > 1}
-                        assert not len(
-                            duplicates), f'{car_model}: Duplicate FW versions: Ecu.{ecu[0]}, {duplicates}'
-                        assert len(
-                            ecu_fw) > 0, f'{car_model}: No FW versions: Ecu.{ecu[0]}'
+  def test_fw_version_lists(self, subtests):
+    for car_model, ecus in FW_VERSIONS.items():
+      with subtests.test(car_model=car_model.value):
+        for ecu, ecu_fw in ecus.items():
+          with subtests.test(ecu):
+            duplicates = {fw for fw in ecu_fw if ecu_fw.count(fw) > 1}
+            assert not len(duplicates), f'{car_model}: Duplicate FW versions: Ecu.{ecu[0]}, {duplicates}'
+            assert len(ecu_fw) > 0, f'{car_model}: No FW versions: Ecu.{ecu[0]}'
 
     def test_all_addrs_map_to_one_ecu(self):
         for brand, cars in VERSIONS.items():
@@ -252,10 +249,29 @@ class TestFwFingerprintTiming:
             # Treat each brand as the most likely (aka, the first) brand with OBD multiplexing initially on
             self.current_obd_multiplexing = True
 
-            t = time.perf_counter()
-            get_fw_versions(self.fake_can_recv, self.fake_can_send,
-                            self.fake_set_obd_multiplexing, brand, num_pandas=num_pandas)
-            self.total_time += time.perf_counter() - t
+  def test_fw_query_timing(self, subtests, mocker):
+    total_ref_time = {1: 7.0, 2: 7.6}
+    brand_ref_times = {
+      1: {
+        'gm': 1.0,
+        'body': 0.1,
+        'chrysler': 0.3,
+        'ford': 1.5,
+        'honda': 0.45,
+        'hyundai': 0.65,
+        'mazda': 0.1,
+        'nissan': 0.8,
+        'subaru': 0.65,
+        'tesla': 0.1,
+        'toyota': 0.7,
+        'volkswagen': 0.65,
+        'byd': 0.1,
+      },
+      2: {
+        'ford': 1.6,
+        'hyundai': 1.15,
+      }
+    }
 
         return self.total_time / self.N
 
