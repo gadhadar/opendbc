@@ -1,5 +1,5 @@
 # from common.numpy_fast import clip, interp
-from opendbc.car.can_definitions import CanData
+# from opendbc.car.can_definitions import CanData
 # from opendbc.car.byd.values import CAR
 
 # from cereal import car
