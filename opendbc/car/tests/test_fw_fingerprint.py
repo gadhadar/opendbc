@@ -252,29 +252,10 @@ class TestFwFingerprintTiming:
             # Treat each brand as the most likely (aka, the first) brand with OBD multiplexing initially on
             self.current_obd_multiplexing = True
 
-    def test_fw_query_timing(self, subtests, mocker):
-        total_ref_time = {1: 7.0, 2: 7.6}
-        brand_ref_times = {
-            1: {
-                'gm': 1.0,
-                'body': 0.1,
-                'chrysler': 0.3,
-                'ford': 1.5,
-                'honda': 0.45,
-                'hyundai': 0.65,
-                'mazda': 0.1,
-                'nissan': 0.8,
-                'subaru': 0.65,
-                'tesla': 0.1,
-                'toyota': 0.7,
-                'volkswagen': 0.65,
-                'byd': 0.1,
-            },
-            2: {
-                'ford': 1.6,
-                'hyundai': 1.15,
-            }
-        }
+            t = time.perf_counter()
+            get_fw_versions(self.fake_can_recv, self.fake_can_send,
+                            self.fake_set_obd_multiplexing, brand, num_pandas=num_pandas)
+            self.total_time += time.perf_counter() - t
 
         return self.total_time / self.N
 
@@ -318,7 +299,7 @@ class TestFwFingerprintTiming:
                     f'get_vin {name} case, query time={self.total_time / self.N} seconds')
 
     def test_fw_query_timing(self, subtests, mocker):
-        total_ref_time = {1: 6.9, 2: 7.5}
+        total_ref_time = {1: 7.0, 2: 7.6}
         brand_ref_times = {
             1: {
                 'gm': 1.0,
@@ -330,6 +311,7 @@ class TestFwFingerprintTiming:
                 'mazda': 0.1,
                 'nissan': 0.8,
                 'subaru': 0.65,
+                'tesla': 0.1,
                 'toyota': 0.7,
                 'volkswagen': 0.65,
                 'byd': 0.1,
