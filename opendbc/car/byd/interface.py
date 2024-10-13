@@ -28,6 +28,7 @@ class CarInterface(CarInterfaceBase):
 
         ret.enableGasInterceptor = False
         ret.openpilotLongitudinalControl = True
+        CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
         if candidate == CAR.BYD_ATTO3:
             ret.wheelbase = 2.72
