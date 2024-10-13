@@ -47,19 +47,15 @@ class BYDPlatformConfig(PlatformConfig):
     dbc_dict: dict = field(
         default_factory=lambda: dbc_dict('byd_general_pt', None))
 
-    def init(self):
-        self.dbc_dict = dbc_dict('byd_general_pt', None)
-
 
 class CAR(Platforms):
     # BYD ATTO 3
     BYD_ATTO3 = BYDPlatformConfig(
         [
-            BYDCarDocs("BYD ATTO 3")
+            BYDCarDocs("BYD ATTO 3 2022-23")
         ],
         CarSpecs(mass=1750, wheelbase=2.72, steerRatio=14.8,
                  tireStiffnessFactor=0.7983),
-        dbc_dict('byd_general_pt', None),
     )
 
 
