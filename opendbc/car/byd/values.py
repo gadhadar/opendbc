@@ -52,7 +52,7 @@ class CAR(Platforms):
     # BYD ATTO 3
     BYD_ATTO3 = BYDPlatformConfig(
         [
-            BYDCarDocs("BYD ATTO 3 2022-23")
+            BYDCarDocs("BYD ATTO3 2023")
         ],
         CarSpecs(mass=1750, wheelbase=2.72, steerRatio=14.8,
                  tireStiffnessFactor=0.7983),
