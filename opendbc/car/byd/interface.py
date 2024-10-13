@@ -1,17 +1,8 @@
 #!/usr/bin/env python3
-# import os
-# from math import fabs, exp
-# from panda import Panda
 
-# from cereal import car
-# from opendbc.car.common.conversions import Conversions as CV
-from opendbc.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint, get_safety_config  # GR QZWF
+from opendbc.car import STD_CARGO_KG, structs, get_safety_config scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint,   # GR QZWF
 from opendbc.car.interfaces import CarInterfaceBase
 from opendbc.car.byd.values import CAR, HUD_MULTIPLIER
-from opendbc.car import structs  # GR QZWF
-# from selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN
-
-# EventName = car.CarEvent.EventName #GR BYD Doesn't seem to be used anywhere
 
 TransmissionType = structs.CarParams.TransmissionType  # GR QZWF
 
@@ -19,10 +10,7 @@ TransmissionType = structs.CarParams.TransmissionType  # GR QZWF
 class CarInterface(CarInterfaceBase):
 
     @staticmethod
-    def get_params(candidate, fingerprint=None, has_relay=False, car_fw=None):
-        if fingerprint is None:
-            fingerprint = gen_empty_fingerprint()
-        ret = CarInterfaceBase.get_std_params(candidate, fingerprint)
+    def _get_params(ret: structs.CarParams, candidate, fingerprint, car_fw, experimental_long, docs) -> structs.CarParams:
         ret.carName = "byd"
         ret.safetyConfigs = [get_safety_config(
             structs.CarParams.SafetyModel.byd)]
