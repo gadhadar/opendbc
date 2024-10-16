@@ -29,10 +29,7 @@ class CarControllerParams:
     STEER_ERROR_MAX = 350     # max delta between torque cmd and torque motor
 
     def __init__(self, CP):
-        self.ACCEL_MAX = 2.0
-        self.STEER_DELTA_UP = 15       # 1.0s time to peak torque
-        # always lower than 45 otherwise the Rav4 faults (Prius seems ok with 50)
-        self.STEER_DELTA_DOWN = 25
+        pass
 
 
 @dataclass
