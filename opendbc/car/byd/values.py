@@ -24,7 +24,7 @@ PEDAL_TRANSITION = 10. * CV.MPH_TO_MS
 
 
 class CarControllerParams:
-    STEER_STEP = 1
+    SER_STEP = 1
     STEER_MAX = 1500
     STEER_ERROR_MAX = 350     # max delta between torque cmd and torque motor
 
@@ -49,7 +49,7 @@ class CAR(Platforms):
     # BYD ATTO 3
     BYD_ATTO3 = BYDPlatformConfig(
         [
-            BYDCarDocs("BYD ATTO3 2023")
+            BYDCarDocs("BYD ATTO3 2022-2023") #The year has to be 4 digits followed by hyphen and 4 digits
         ],
         CarSpecs(mass=1750, wheelbase=2.72, steerRatio=14.8,
                  tireStiffnessFactor=0.7983),
