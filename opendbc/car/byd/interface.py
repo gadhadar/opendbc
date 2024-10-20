@@ -16,7 +16,7 @@ class CarInterface(CarInterfaceBase):
             structs.CarParams.SafetyModel.byd)]
         ret.safetyConfigs[0].safetyParam = 1
         ret.transmissionType = TransmissionType.automatic
-        ret.radarOffCan = True
+        ret.radarUnavailable = True
         ret.enableApgs = False                 # advanced parking guidance system
         ret.enableDsu = False                  # driving support unit
 
