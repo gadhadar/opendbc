@@ -321,7 +321,7 @@ class TestFwFingerprintTiming:
             2: {
                 'ford': 1.6,
                 'hyundai': 1.15,
-                'byd': 0.05,
+                'byd': 0.04,
             }
         }
 
