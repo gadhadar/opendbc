@@ -1,9 +1,5 @@
-# QZWF GR
-
-# Updating the code using iXcess Bukapilot as reference
-
 from dataclasses import dataclass, field
-from opendbc.car import CarSpecs, PlatformConfig, Platforms,  dbc_dict
+from opendbc.car import CarSpecs, PlatformConfig, Platforms, dbc_dict
 from opendbc.car.common.conversions import Conversions as CV
 from opendbc.car.structs import CarParams
 from opendbc.car.docs_definitions import CarDocs, CarParts, CarHarness, SupportType
@@ -13,8 +9,8 @@ HUD_MULTIPLIER = 0.718
 
 Ecu = CarParams.Ecu
 
-MIN_ACC_SPEED = 19. * CV.MPH_TO_MS
-PEDAL_TRANSITION = 10. * CV.MPH_TO_MS
+# MIN_ACC_SPEED = 19. * CV.MPH_TO_MS
+# PEDAL_TRANSITION = 10. * CV.MPH_TO_MS
 
 
 class CarControllerParams:
@@ -39,13 +35,13 @@ class BYDPlatformConfig(PlatformConfig):
 class CAR(Platforms):
     BYD_ATTO3 = BYDPlatformConfig(
         [
-            BYDCarDocs("BYD ATTO3 Electric 2022-23", support_type=SupportType.COMMUNITY) #The year has to be 4 digits followed by hyphen and 4 digits
+            # The year has to be 4 digits followed by hyphen and 4 digits
+            BYDCarDocs("BYD ATTO3 Electric 2022-23",
+                       support_type=SupportType.COMMUNITY)
         ],
         CarSpecs(mass=1750, wheelbase=2.72, steerRatio=14.8,
                  tireStiffnessFactor=0.7983),
     )
-
-
 
 
 # QZWF GR

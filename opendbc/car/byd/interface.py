@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from opendbc.car import STD_CARGO_KG, structs, get_safety_config, scale_rot_inertia, scale_tire_stiffness
+from opendbc.car import STD_CARGO_KG, structs, get_safety_config, gen_empty_fingerprint, scale_rot_inertia, scale_tire_stiffness
 from opendbc.car.interfaces import CarInterfaceBase
 from opendbc.car.byd.values import CAR, HUD_MULTIPLIER
 
@@ -10,7 +10,7 @@ TransmissionType = structs.CarParams.TransmissionType  # GR QZWF
 class CarInterface(CarInterfaceBase):
 
     @staticmethod
-    def _get_params(ret: structs.CarParams, candidate, fingerprint, car_fw, experimental_long, docs) -> structs.CarParams:
+    def _get_params(ret: structs.CarParams, candidate, fingerprint=gen_empty_fingerprint(), car_fw=None, experimental_long, docs) -> structs.CarParams:
         ret.carName = "byd"
         ret.safetyConfigs = [get_safety_config(
             structs.CarParams.SafetyModel.byd)]
@@ -28,7 +28,6 @@ class CarInterface(CarInterfaceBase):
 
         ret.enableGasInterceptor = False
         ret.openpilotLongitudinalControl = True
-        CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
         if candidate == CAR.BYD_ATTO3:
             ret.wheelbase = 2.72
@@ -65,6 +64,10 @@ class CarInterface(CarInterfaceBase):
             ret.mass, ret.wheelbase, ret.centerToFront, tire_stiffness_factor=tire_stiffness_factor)
 
         return ret
+
+    @staticmethod
+    def init(CP, can_recv, can_send):
+        return CarInterface(CP, can_recv, can_send)
 
     # returns a car.CarState
     def update(self, c, can_strings):
