@@ -24,7 +24,6 @@ class CarInterface(CarInterfaceBase):
         ret.steerControlType = structs.CarParams.SteerControlType.angle
         ret.steerActuatorDelay = 0.01          # Steering wheel actuator delay in seconds
 
-        ret.enableGasInterceptor = False
         ret.openpilotLongitudinalControl = True
 
         if candidate == CAR.BYD_ATTO3:
