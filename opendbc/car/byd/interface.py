@@ -44,9 +44,6 @@ class CarInterface(CarInterfaceBase):
             ret.dashcamOnly = True
             ret.safetyModel = structs.CarParams.SafetyModel.noOutput
 
-        # currently not in use, byd is using stock long
-        ret.longitudinalTuning.deadzoneBP = [0., 8.05, 20]
-        ret.longitudinalTuning.deadzoneV = [0., 0., 0.]
         ret.longitudinalTuning.kiBP = [0., 5., 20.]
         ret.longitudinalTuning.kiV = [0.32, 0.23, 0.12]
         ret.longitudinalTuning.kiV = [0., 0., 0.]
