@@ -20,7 +20,6 @@ class CarInterface(CarInterfaceBase):
         ret.enableDsu = False                  # driving support unit
 
         # Lateral MPC cost on steering rate, higher value = sharper turn
-        ret.steerRateCost = 0.1
         ret.steerLimitTimer = 0.1              # time before steerLimitAlert is issued
         ret.steerControlType = structs.CarParams.SteerControlType.angle
         ret.steerActuatorDelay = 0.01          # Steering wheel actuator delay in seconds
