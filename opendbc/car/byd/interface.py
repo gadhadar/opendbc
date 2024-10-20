@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from opendbc.car import STD_CARGO_KG, structs, get_safety_config, gen_empty_fingerprint, scale_rot_inertia, scale_tire_stiffness
+from opendbc.car import STD_CARGO_KG, structs, get_safety_config, scale_rot_inertia, scale_tire_stiffness
 from opendbc.car.interfaces import CarInterfaceBase
 from opendbc.car.byd.values import CAR, HUD_MULTIPLIER
 
