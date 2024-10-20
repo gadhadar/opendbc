@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from opendbc.car import CarSpecs, PlatformConfig, Platforms, dbc_dict
-from opendbc.car.common.conversions import Conversions as CV
 from opendbc.car.structs import CarParams
 from opendbc.car.docs_definitions import CarDocs, CarParts, CarHarness, SupportType
 from opendbc.car.fw_query_definitions import FwQueryConfig, Request, StdQueries
