@@ -17,7 +17,6 @@ class CarInterface(CarInterfaceBase):
         ret.safetyConfigs[0].safetyParam = 1
         ret.transmissionType = TransmissionType.automatic
         ret.radarUnavailable = True
-        ret.enableApgs = False                 # advanced parking guidance system
         ret.enableDsu = False                  # driving support unit
 
         # Lateral MPC cost on steering rate, higher value = sharper turn
