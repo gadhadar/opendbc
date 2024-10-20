@@ -38,8 +38,7 @@ class CarInterface(CarInterfaceBase):
             # currently not in use, byd is using stock long
             ret.longitudinalTuning.kpBP = [0., 5., 20.]
             ret.longitudinalTuning.kpV = [1.5, 1.3, 1.0]
-            ret.longitudinalActuatorDelayLowerBound = 0.3
-            ret.longitudinalActuatorDelayUpperBound = 0.4
+            ret.longitudinalActuatorDelay = 0.4
 
         else:
             ret.dashcamOnly = True
