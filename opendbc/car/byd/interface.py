@@ -10,7 +10,7 @@ TransmissionType = structs.CarParams.TransmissionType  # GR QZWF
 class CarInterface(CarInterfaceBase):
 
     @staticmethod
-    def _get_params(ret: structs.CarParams, candidate, fingerprint=gen_empty_fingerprint(), car_fw=None, experimental_long, docs) -> structs.CarParams:
+    def _get_params(ret: structs.CarParams, candidate, fingerprint, car_fw, experimental_long, docs) -> structs.CarParams:
         ret.carName = "byd"
         ret.safetyConfigs = [get_safety_config(
             structs.CarParams.SafetyModel.byd)]
