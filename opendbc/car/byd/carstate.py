@@ -153,7 +153,7 @@ class CarState(CarStateBase):
 
     @staticmethod
     def get_can_parser(CP):
-        signals = [
+        messages = [
             # sig_name, sig_address, default
             ("GEAR", "DRIVE_STATE", 1),
             ("BRAKE_PRESSED", "DRIVE_STATE", 0),
@@ -202,4 +202,4 @@ class CarState(CarStateBase):
         checks = []
 
         # todo: make it such that enforce_checks=True
-        return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0, enforce_checks=False)
+        return CANParser(DBC[CP.carFingerprint]['pt'], messages, 0)
