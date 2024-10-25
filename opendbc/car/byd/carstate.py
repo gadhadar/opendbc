@@ -199,7 +199,7 @@ class CarState(CarStateBase):
             ("STEER_ACTIVE_ACTIVE_LOW", "LKAS_HUD_ADAS", 0),
             ("SETTINGS", "LKAS_HUD_ADAS", 0)
         ]
-        checks = []
+        # checks = []
 
         # todo: make it such that enforce_checks=True
         return CANParser(DBC[CP.carFingerprint]['pt'], messages, 0)
