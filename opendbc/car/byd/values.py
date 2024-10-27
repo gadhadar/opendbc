@@ -37,23 +37,12 @@ class CAR(Platforms):
     BYD_ATTO3 = BYDPlatformConfig(
         [
             # The year has to be 4 digits followed by hyphen and 4 digits
-            BYDCarDocs("BYD ATTO3 Electric 2022-23",
+            BYDCarDocs("BYD ATTO3 Electric 2022-24",
                        support_type=SupportType.COMMUNITY)
         ],
         CarSpecs(mass=1750, wheelbase=2.72, steerRatio=14.8,
                  tireStiffnessFactor=0.7983),
     )
 
-
-# QZWF GR
-FW_QUERY_CONFIG = FwQueryConfig(
-    requests=[
-        Request(
-            [StdQueries.UDS_VERSION_REQUEST],
-            [StdQueries.UDS_VERSION_RESPONSE],
-            bus=0,
-        ),
-    ],
-)
 
 DBC = CAR.create_dbc_map()
