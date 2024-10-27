@@ -29,6 +29,7 @@ class CarController(CarControllerBase):
         can_sends = []
 
         actuators = CC.actuators
+        laneActive = CC.lane_active
 
         # steer
         apply_angle = apply_byd_steer_angle_limits(
