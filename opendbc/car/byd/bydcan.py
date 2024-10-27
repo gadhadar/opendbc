@@ -113,7 +113,7 @@ def create_lkas_hud(packer, enabled, lss_state, lss_alert, tsr, ahb, passthrough
     }
 
     dat = packer.make_can_msg("LKAS_HUD_ADAS", 0, values)[2]
-    crc = byd_checksum(0xaf, dat[:-1])
+    crc = byd_checksum(0xaf, str(dat)[:-1])
     values["CHECKSUM"] = crc
     return packer.make_can_msg("LKAS_HUD_ADAS", 0, values)
 
@@ -128,6 +128,6 @@ def send_buttons(packer, state, count):
         "COUNTER": count,
     }
     dat = packer.make_can_msg("PCM_BUTTONS", 0, values)[2]
-    crc = byd_checksum(0xaf, dat[:-1])
+    crc = byd_checksum(0xaf, str(dat)[:-1])
     values["CHECKSUM"] = crc
     return packer.make_can_msg("PCM_BUTTONS", 0, values)
