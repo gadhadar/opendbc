@@ -317,7 +317,7 @@ class TestFwFingerprintTiming:
                 'tesla': 0.1,
                 'toyota': 0.7,
                 'volkswagen': 0.65,
-                'byd': 1.0,
+                'byd': 0.5,
             },
             2: {
                 'ford': 1.6,
