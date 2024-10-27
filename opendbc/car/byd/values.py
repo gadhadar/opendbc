@@ -57,8 +57,8 @@ FW_QUERY_CONFIG = FwQueryConfig(
     ],
     extra_ecus=[
         # All known ECUs translated from the DBC file
-        (Ecu.steering, 0x1E2, None),
-        (Ecu.adas, 0x32D, None),
+        (Ecu.unknown, 0x1E2, None),
+        (Ecu.unknown, 0x32D, None),
     ]
 )
 
