@@ -51,7 +51,6 @@ FW_QUERY_CONFIG = FwQueryConfig(
         Request(
             [StdQueries.UDS_VERSION_REQUEST],
             [StdQueries.UDS_VERSION_RESPONSE],
-            whitelist_ecus=[Ecu.engine, Ecu.fwdRadar, Ecu.eps, Ecu.hvac],
             bus=0,
         ),
     ],
