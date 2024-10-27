@@ -301,8 +301,6 @@ class TestFwFingerprintTiming:
                 print(
                     f'get_vin {name} case, query time={self.total_time / self.N} seconds')
 
-    
-
     def test_get_fw_versions(self, subtests, mocker):
         # some coverage on IsoTpParallelQuery and panda UDS library
         # TODO: replace this with full fingerprint simulation testing
