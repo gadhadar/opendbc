@@ -1,10 +1,4 @@
-# from common.numpy_fast import clip, interp
 # from opendbc.car.can_definitions import CanData
-# from opendbc.car.byd.values import CAR
-
-# from cereal import car
-
-# SetDistance = car.CarState.CruiseState.SetDistance
 
 
 def compute_set_distance(state):
@@ -55,10 +49,9 @@ def create_can_steer_command(packer, steer_angle, steer_req, is_standstill, raw_
         "SET_ME_1_2": 1,
     }
 
-    dat = packer.make_can_msg("STEERING_MODULE_ADAS", 0, values)[2]
-    # crc = byd_checksum(0xaf, dat[:-1])
-    # values["CHECKSUM"] = crc
-    values["CHECKSUM"] = byd_checksum(0xaf, dat[:-1])
+    dat = packer.make_can_msg("STEERING_MODULE_ADAS", 0, values)[1]
+    crc = byd_checksum(0xaf, dat[:-1])
+    values["CHECKSUM"] = crc
     return packer.make_can_msg("STEERING_MODULE_ADAS", 0, values)
 
 
