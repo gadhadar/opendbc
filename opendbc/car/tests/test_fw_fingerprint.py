@@ -320,7 +320,7 @@ class TestFwFingerprintTiming:
                 'volkswagen': 0.65,
             },
             2: {
-                'byd': 1.15,
+                'byd': 0.15,
                 'ford': 1.6,
                 'hyundai': 1.15,
             }
