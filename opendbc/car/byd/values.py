@@ -51,9 +51,15 @@ FW_QUERY_CONFIG = FwQueryConfig(
         Request(
             [StdQueries.UDS_VERSION_REQUEST],
             [StdQueries.UDS_VERSION_RESPONSE],
+            whitelist_ecus=[Ecu.engine, Ecu.fwdRadar, Ecu.eps, Ecu.hvac],
             bus=0,
         ),
     ],
+    extra_ecus=[
+        # All known ECUs translated from the DBC file
+        (Ecu.steering, 0x1E2, None),
+        (Ecu.adas, 0x32D, None),
+    ]
 )
 
 # So the DBC files contain Decimal Address. This needs to be converted to Hexadecimal Address. This is all that FW_QUERY_CONFIG Is looking for in most cases
