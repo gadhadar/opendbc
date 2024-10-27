@@ -15,7 +15,9 @@ Ecu = CarParams.Ecu
 class CarControllerParams:
 
     def __init__(self, CP):
-        pass
+        # maximum allow 150 degree per second, 100Hz loop means 1.5
+        self.ANGLE_RATE_LIMIT_UP = 3
+        self.ANGLE_RATE_LIMIT_DOWN = 3
 
 
 @dataclass

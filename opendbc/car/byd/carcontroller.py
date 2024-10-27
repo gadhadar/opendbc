@@ -1,13 +1,8 @@
-# from cereal import car
-# from opendbc.car import make_can_msg
-from opendbc.car.byd.bydcan import create_can_steer_command, send_buttons, create_lkas_hud
-# from opendbc.car.byd.bydcan import create_accel_command
-from opendbc.car.byd.values import DBC
-# from opendbc.car.byd.values import CAR
 from opendbc.can.packer import CANPacker
 from opendbc.car.common.numpy_fast import clip
-
-# import cereal.messaging as messaging
+from opendbc.car.byd import bydcan
+from opendbc.car.byd.values import DBC, CarControllerParams
+from opendbc.car.interfaces import CarControllerBase
 
 
 def apply_byd_steer_angle_limits(apply_angle, actual_angle, v_ego, LIMITS):
@@ -19,15 +14,9 @@ def apply_byd_steer_angle_limits(apply_angle, actual_angle, v_ego, LIMITS):
     return clip(apply_angle, actual_angle - rate_limits, actual_angle + rate_limits)
 
 
-class CarControllerParams:
-    def __init__(self, CP):
-        # maximum allow 150 degree per second, 100Hz loop means 1.5
-        self.ANGLE_RATE_LIMIT_UP = 3
-        self.ANGLE_RATE_LIMIT_DOWN = 3
-
-
-class CarController:
-    def __init__(self, dbc_name, CP, VM):
+class CarController(CarControllerBase):
+    def __init__(self, dbc_name, CP):
+        super().__init__(dbc_name, CP)
         self.params = CarControllerParams(self.CP)
         self.packer = CANPacker(DBC[self.CP.carFingerprint]['pt'])
         self.steer_rate_limited = False
@@ -35,8 +24,11 @@ class CarController:
         self.send_resume = False
         self.resume_counter = 0
 
-    def update(self, enabled, CS, frame, actuators, lead_visible, rlane_visible, llane_visible, pcm_cancel, ldw, laneActive):
+    def update(self, CC, CS, now_nanos):
+        # Send CAN Commands
         can_sends = []
+
+        actuators = CC.actuators
 
         # steer
         apply_angle = apply_byd_steer_angle_limits(
@@ -45,7 +37,7 @@ class CarController:
             abs(apply_angle - CS.out.steeringAngleDeg) > 2.5)
 
         # BYD CAN controlled lateral running at 50hz
-        if (frame % 2) == 0:
+        if (self.frame % 2) == 0:
 
             # logic to activate and deactivate lane keep, cannot tie to the lka_on state because it will occasionally deactivate itself
             if CS.lka_on:
@@ -56,30 +48,30 @@ class CarController:
             if CS.out.steeringTorqueEps > 15:
                 apply_angle = CS.out.steeringAngleDeg
 
-            lat_active = enabled and abs(
+            lat_active = CC.enabled and abs(
                 CS.out.steeringAngleDeg) < 90 and self.lka_active and not CS.out.standstill
             # temporary hardcode 60 because if 90 degrees it will fault
             # brake_hold = False
-            can_sends.append(create_can_steer_command(
-                self.packer, apply_angle, lat_active and laneActive, CS.out.standstill, (frame/2) % 16))
+            can_sends.append(bydcan.create_can_steer_command(
+                self.packer, apply_angle, lat_active and laneActive, CS.out.standstill, (self.frame/2) % 16))
 #      can_sends.append(create_accel_command(self.packer, actuators.accel, enabled, brake_hold, (frame/2) % 16))
-            can_sends.append(create_lkas_hud(self.packer, enabled, CS.lss_state, CS.lss_alert, CS.tsr, CS.abh, CS.passthrough, CS.HMA, CS.pt2, CS.pt3,
-                                             CS.pt4, CS.pt5, self.lka_active, frame % 16))
+            can_sends.append(bydcan.create_lkas_hud(self.packer, CC.enabled, CS.lss_state, CS.lss_alert, CS.tsr, CS.abh, CS.passthrough, CS.HMA, CS.pt2, CS.pt3,
+                                                    CS.pt4, CS.pt5, self.lka_active, self.frame % 16))
 
         # frequency doesn't matter (original 20hz), but the counter must match + 1 else it will fault
-        if (CS.out.standstill or CS.out.cruiseState.standstill) and enabled and (frame % 50 == 0):
+        if (CS.out.standstill or CS.out.cruiseState.standstill) and CC.enabled and (self.frame % 50 == 0):
             self.send_resume = True
 
         # send 3 consecutive resume command
-        if (frame % 10) == 0 and self.send_resume:
+        if (self.frame % 10) == 0 and self.send_resume:
             if self.resume_counter >= 2:
                 self.send_resume = False
                 self.resume_counter = 0
-            can_sends.append(send_buttons(
+            can_sends.append(self.send_buttons(
                 self.packer, 1, (CS.counter_pcm_buttons + 1) % 16))
             self.resume_counter += 1
 
-        new_actuators = actuators.copy()
+        new_actuators = actuators.as_builder()
         new_actuators.steeringAngleDeg = apply_angle
 
         return new_actuators, can_sends
