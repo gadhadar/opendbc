@@ -61,14 +61,3 @@ class CarInterface(CarInterfaceBase):
     @staticmethod
     def init(CP, can_recv, can_send):
         return CarInterface(CP, can_recv, can_send)
-
-    # pass in a car.CarControl to be called at 100hz
-
-    def apply(self, c):
-
-        isLdw = c.hudControl.leftLaneDepart or c.hudControl.rightLaneDepart
-
-        can_sends = self.CC.update(c.enabled, self.CS, self.frame, c.actuators, c.hudControl.leadVisible,
-                                   c.hudControl.rightLaneVisible, c.hudControl.leftLaneVisible, c.cruiseControl.cancel, isLdw, c.laneActive)
-        self.frame += 1
-        return can_sends
