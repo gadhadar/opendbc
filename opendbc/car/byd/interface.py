@@ -62,24 +62,8 @@ class CarInterface(CarInterfaceBase):
     def init(CP, can_recv, can_send):
         return CarInterface(CP, can_recv, can_send)
 
-    # returns a car.CarState
-    def update(self, c, can_strings):
-        # to receive CAN Messages
-        self.cp.update_strings(can_strings)
-
-        ret = self.CS.update(self.cp)
-        ret.canValid = self.cp.can_valid
-        ret.steeringRateLimited = self.CC.steer_rate_limited if self.CC is not None else False
-
-        # events
-        events = self.create_common_events(ret)
-
-        ret.events = events.to_msg()
-
-        self.CS.out = ret.as_reader()
-        return self.CS.out
-
     # pass in a car.CarControl to be called at 100hz
+
     def apply(self, c):
 
         isLdw = c.hudControl.leftLaneDepart or c.hudControl.rightLaneDepart

@@ -146,9 +146,10 @@ class CarState(CarStateBase):
             ret.leftBlindspot = bool(cp.vl["BSM"]["LEFT_APPROACH"])
             ret.rightBlindspot = bool(cp.vl["BSM"]["RIGHT_APPROACH"])
 
-# Camera Controls
+        # Camera Controls
         self.lss_state = cp_cam.vl["LKAS_HUD_ADAS"]["LSS_STATE"]
         self.lss_alert = cp_cam.vl["LKAS_HUD_ADAS"]["SETTINGS"]
+
         return ret
 
     @staticmethod
