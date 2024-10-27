@@ -29,7 +29,6 @@ class CarController(CarControllerBase):
         can_sends = []
 
         actuators = CC.actuators
-        laneActive = CC.lane_active
 
         # steer
         apply_angle = apply_byd_steer_angle_limits(
@@ -54,7 +53,7 @@ class CarController(CarControllerBase):
             # temporary hardcode 60 because if 90 degrees it will fault
             # brake_hold = False
             can_sends.append(bydcan.create_can_steer_command(
-                self.packer, apply_angle, lat_active and laneActive, CS.out.standstill, (self.frame/2) % 16))
+                self.packer, apply_angle, lat_active, CS.out.standstill, (self.frame/2) % 16))
 #      can_sends.append(create_accel_command(self.packer, actuators.accel, enabled, brake_hold, (frame/2) % 16))
             can_sends.append(bydcan.create_lkas_hud(self.packer, CC.enabled, CS.lss_state, CS.lss_alert, CS.tsr, CS.abh, CS.passthrough, CS.HMA, CS.pt2, CS.pt3,
                                                     CS.pt4, CS.pt5, self.lka_active, self.frame % 16))
