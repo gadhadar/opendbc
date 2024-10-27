@@ -67,7 +67,7 @@ class CarController(CarControllerBase):
             if self.resume_counter >= 2:
                 self.send_resume = False
                 self.resume_counter = 0
-            can_sends.append(self.send_buttons(
+            can_sends.append(bydcan.send_buttons(
                 self.packer, 1, (CS.counter_pcm_buttons + 1) % 16))
             self.resume_counter += 1
 
