@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from opendbc.car import CarSpecs, PlatformConfig, Platforms, dbc_dict
 from opendbc.car.structs import CarParams
 from opendbc.car.docs_definitions import CarDocs, CarParts, CarHarness, SupportType
-# from opendbc.car.fw_query_definitions import FwQueryConfig, Request, StdQueries
+from opendbc.car.fw_query_definitions import FwQueryConfig, Request, StdQueries
 
 HUD_MULTIPLIER = 0.718
 
@@ -43,6 +43,20 @@ class CAR(Platforms):
         CarSpecs(mass=1750, wheelbase=2.72, steerRatio=14.8,
                  tireStiffnessFactor=0.7983),
     )
+
+
+# QZWF GR
+FW_QUERY_CONFIG = FwQueryConfig(
+    requests=[
+        Request(
+            [StdQueries.UDS_VERSION_REQUEST],
+            [StdQueries.UDS_VERSION_RESPONSE],
+            bus=0,
+        ),
+    ],
+)
+
+# So the DBC files contain Decimal Address. This needs to be converted to Hexadecimal Address. This is all that FW_QUERY_CONFIG Is looking for in most cases
 
 
 DBC = CAR.create_dbc_map()
